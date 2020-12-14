@@ -7,5 +7,6 @@ namespace Doggo.Repositories
     {
         Dog GetById(int id);
         List<Dog> GetDogs();
+        List<Dog> GetDogsByOwnerId(int ownerId);
     }
 }

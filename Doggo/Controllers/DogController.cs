@@ -19,6 +19,8 @@ namespace Doggo.Controllers
         }
 
         // GET: DogController
+        // /dog/index
+
         public ActionResult Index()
         {
             List<Dog> dogs = _dogRepo.GetDogs();
@@ -27,21 +29,24 @@ namespace Doggo.Controllers
         }
 
         // GET: DogController/Details/5
+        // /dog/details/{id}
         public ActionResult Details(int id)
         {
             return View();
         }
 
         // GET: DogController/Create
+        // /dog/create
         public ActionResult Create()
         {
             return View();
         }
 
         // POST: DogController/Create
+        // /dog/create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Dog dog)
         {
             try
             {
