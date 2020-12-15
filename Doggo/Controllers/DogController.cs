@@ -50,11 +50,13 @@ namespace Doggo.Controllers
         {
             try
             {
+                _dogRepo.AddDog(dog);
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return View(dog);
             }
         }
 
