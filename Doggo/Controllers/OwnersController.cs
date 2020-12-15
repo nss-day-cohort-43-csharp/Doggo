@@ -3,6 +3,7 @@ using Doggo.Models.ViewModels;
 using Doggo.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,13 @@ namespace Doggo.Controllers
         private IWalkerRepository _walkerRepo;
         private INeighborhoodRepository _neighborhoodRepo;
 
-        public OwnersController(IOwnerRepository ownerRepo, IDogRepository dogRepo, IWalkerRepository walkerRepo, INeighborhoodRepository neighborhoodRepo)
+        public OwnersController(
+            IOwnerRepository ownerRepository, 
+            IDogRepository dogRepo, 
+            IWalkerRepository walkerRepo, 
+            INeighborhoodRepository neighborhoodRepo)
         {
-            _ownerRepo = ownerRepo;
+            _ownerRepo = ownerRepository;
             _dogRepo = dogRepo;
             _walkerRepo = walkerRepo;
             _neighborhoodRepo = neighborhoodRepo;
@@ -81,7 +86,7 @@ namespace Doggo.Controllers
             {
                 _ownerRepo.AddOwner(vm.Owner);
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = vm.Owner.Id });
             }
             catch (Exception ex)
             {
