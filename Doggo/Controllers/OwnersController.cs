@@ -75,20 +75,20 @@ namespace Doggo.Controllers
         // POST: OwnerController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(OwnerFormViewModel viewModel)
+        public ActionResult Create(OwnerFormViewModel vm)
         {
             try
             {
-                _ownerRepo.AddOwner(viewModel.Owner);
+                _ownerRepo.AddOwner(vm.Owner);
 
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                viewModel.ErrorMessage = "Woops! Something went wrong while saving this owner";
-                viewModel.NeighborhoodOptions = _neighborhoodRepo.GetAll();
+                vm.ErrorMessage = "Woops! Something went wrong while saving this owner";
+                vm.NeighborhoodOptions = _neighborhoodRepo.GetAll();
 
-                return View(viewModel);
+                return View(vm);
             }
 
 
@@ -99,24 +99,33 @@ namespace Doggo.Controllers
         public ActionResult Edit(int id)
         {
             Owner owner = _ownerRepo.GetById(id);
+            List<Neighborhood> neighborhoods = _neighborhoodRepo.GetAll();
 
-            return View(owner);
+            OwnerFormViewModel vm = new OwnerFormViewModel()
+            {
+                NeighborhoodOptions = neighborhoods,
+                Owner = owner
+            };
+
+            return View(vm);
         }
 
         // POST: OwnerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Owner owner)
+        public ActionResult Edit(int id, OwnerFormViewModel vm)
         {
             try
             {
-                _ownerRepo.UpdateOwner(owner);
+                _ownerRepo.UpdateOwner(vm.Owner);
 
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View(owner);
+                vm.ErrorMessage = "Woops! Something went wrong while saving this owner";
+                vm.NeighborhoodOptions = _neighborhoodRepo.GetAll();
+                return View(vm);
             }
         }
 
