@@ -25,7 +25,7 @@ namespace Doggo.Repositories
             }
         }
 
-        public List<Walk> GetByWalkerId(int walkerId)
+        public List<Walk> GetByWalksByWalkerId(int walkerId)
         {
             using (SqlConnection conn = Connection)
             {
@@ -37,7 +37,8 @@ namespace Doggo.Repositories
                         FROM Walks walk
                         JOIN Dog dog on walk.DogId = dog.Id
                         JOIN Owner owner on dog.OwnerId = owner.Id
-                        WHERE walk.WalkerId = @id";
+                        WHERE walk.WalkerId = @id
+                        ORDER BY walk.[Date] DESC";
 
                     cmd.Parameters.AddWithValue("@id", walkerId);
 

@@ -5,6 +5,6 @@ namespace Doggo.Repositories
 {
     public interface IWalkRepository
     {
-        List<Walk> GetByWalkerId(int walkerId);
+        List<Walk> GetByWalksByWalkerId(int walkerId);
     }
 }

@@ -1,12 +1,15 @@
 ﻿using Doggo.Models;
 using Doggo.Models.ViewModels;
 using Doggo.Repositories;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 // URL: /owners/create
@@ -22,9 +25,9 @@ namespace Doggo.Controllers
         private INeighborhoodRepository _neighborhoodRepo;
 
         public OwnersController(
-            IOwnerRepository ownerRepository, 
-            IDogRepository dogRepo, 
-            IWalkerRepository walkerRepo, 
+            IOwnerRepository ownerRepository,
+            IDogRepository dogRepo,
+            IWalkerRepository walkerRepo,
             INeighborhoodRepository neighborhoodRepo)
         {
             _ownerRepo = ownerRepository;
@@ -163,6 +166,38 @@ namespace Doggo.Controllers
             {
                 return View();
             }
+        }
+
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Login(LoginViewModel viewModel)
+        {
+            Owner owner = _ownerRepo.GetOwnerByEmail(viewModel.Email);
+
+            if (owner == null)
+            {
+                return Unauthorized();
+            }
+
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, owner.Id.ToString()),
+                new Claim(ClaimTypes.Email, owner.Email),
+                new Claim(ClaimTypes.Role, "DogOwner"),
+            };
+
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
+
+            return RedirectToAction("Index", "Dog");
         }
     }
 }

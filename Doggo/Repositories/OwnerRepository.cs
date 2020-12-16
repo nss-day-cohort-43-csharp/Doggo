@@ -119,7 +119,7 @@ namespace Doggo.Repositories
 
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"
+                    cmd.CommandText = $@"
                         SELECT Id, [Name], Email, Address, Phone, NeighborhoodId
                         FROM Owner
                         WHERE Email = @email";
