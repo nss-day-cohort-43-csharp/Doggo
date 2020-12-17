@@ -10,5 +10,14 @@ namespace Doggo.Models.ViewModels
         public Walker Walker { get; set; }
         public List<Walk> Walks { get; set; }
         public string TotalTimeWalkedDisplay { get; set; }
+        public string WalkTimeDisplay {
+            get
+            {
+                int totalWalkSeconds = Walks.Sum(w => w.Duration);
+                TimeSpan walkTime = TimeSpan.FromSeconds(totalWalkSeconds);
+                string walkTimeDisplay = $"{walkTime.Hours}hr {walkTime.Minutes}min";
+                return walkTimeDisplay;
+            }
+        }
     }
 }

@@ -37,6 +37,15 @@ namespace Doggo.Controllers
         // /dog/details/{id}
         public ActionResult Details(int id)
         {
+            Dog dog = _dogRepo.GetById(id);
+
+            int currentUserId = GetCurrentUserId();
+
+            if (dog.OwnerId != currentUserId)
+            {
+                return NotFound();
+            }
+
             return View();
         }
 
